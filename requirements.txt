@@ -1,0 +1,4 @@
+flask
+duckduckgo-search
+requests
+python-dotenv
