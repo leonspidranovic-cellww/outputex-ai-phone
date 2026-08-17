@@ -6,9 +6,25 @@
     <title>OUTPUTEX AI</title>
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Segoe UI', system-ui, sans-serif; background: #0b0e14; color: #e0e0e0; height: 100vh; overflow: hidden; }
-        .app { display: flex; height: 100vh; width: 100vw; background: #0d1117; }
+        /* Глобальный сброс */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        html, body {
+            height: 100%;
+            overflow: hidden;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background: #0b0e14;
+            color: #e0e0e0;
+        }
+        .app {
+            display: flex;
+            height: 100vh;
+            width: 100vw;
+            background: #0d1117;
+        }
 
         /* Сайдбар */
         .sidebar {
@@ -65,7 +81,16 @@
         .sidebar-history::-webkit-scrollbar-thumb { background: #2a2f3a; border-radius: 10px; }
 
         .history-group { margin-bottom: 16px; }
-        .history-group .group-title { font-size: 11px; font-weight: 600; color: #6a7a8a; text-transform: uppercase; letter-spacing: 0.3px; margin-bottom: 4px; padding-left: 4px; }
+        .history-group .group-title {
+            font-size: 11px;
+            font-weight: 600;
+            color: #6a7a8a;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            margin-bottom: 4px;
+            padding-left: 4px;
+        }
+
         .history-item {
             padding: 6px 10px;
             border-radius: 8px;
@@ -80,8 +105,18 @@
         }
         .history-item:hover { background: #2a2f3a; }
         .history-item.active { background: #2a2f3a; color: #fff; }
-        .history-item .title { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; flex: 1; }
-        .history-item .meta { font-size: 11px; color: #6a7a8a; flex-shrink: 0; margin-right: 4px; }
+        .history-item .title {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            flex: 1;
+        }
+        .history-item .meta {
+            font-size: 11px;
+            color: #6a7a8a;
+            flex-shrink: 0;
+            margin-right: 4px;
+        }
         .history-item .menu-btn {
             background: none;
             border: none;
@@ -93,9 +128,8 @@
             transition: 0.15s;
         }
         .history-item:hover .menu-btn,
-        .history-item.active .menu-btn {
-            opacity: 1;
-        }
+        .history-item.active .menu-btn { opacity: 1; }
+
         .dropdown-menu {
             display: none;
             position: absolute;
@@ -121,7 +155,13 @@
         }
         .dropdown-menu .menu-item:hover { background: #2a2f3a; color: #fff; }
         .dropdown-menu .menu-item.danger { color: #f87171; }
-        .sidebar-empty { color: #6a7a8a; text-align: center; padding: 30px 0; font-size: 14px; }
+
+        .sidebar-empty {
+            color: #6a7a8a;
+            text-align: center;
+            padding: 30px 0;
+            font-size: 14px;
+        }
 
         /* Основная область */
         .main {
@@ -130,7 +170,11 @@
             flex-direction: column;
             min-width: 0;
             background: #0d1117;
+            height: 100vh;
+            overflow: hidden;
         }
+
+        /* Шапка */
         .header {
             padding: 10px 16px;
             background: #161b22;
@@ -139,6 +183,7 @@
             align-items: center;
             gap: 8px;
             flex-shrink: 0;
+            min-height: 52px;
         }
         .header .menu-btn {
             background: none;
@@ -203,7 +248,7 @@
             gap: 4px;
         }
 
-        /* Сообщения */
+        /* Чат — растягивается на всю высоту */
         .messages {
             flex: 1;
             overflow-y: auto;
@@ -213,11 +258,13 @@
             gap: 12px;
             background: #0d1117;
             scroll-behavior: smooth;
+            min-height: 0;
         }
         .messages::-webkit-scrollbar { width: 6px; }
         .messages::-webkit-scrollbar-track { background: #161b22; }
         .messages::-webkit-scrollbar-thumb { background: #2a2f3a; border-radius: 10px; }
 
+        /* Сообщения */
         .message {
             display: flex;
             gap: 10px;
@@ -342,7 +389,7 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* Поле ввода */
+        /* Поле ввода — прижато к низу */
         .input-area {
             padding: 10px 16px 14px;
             background: #0d1117;
@@ -351,6 +398,7 @@
             gap: 10px;
             align-items: center;
             flex-shrink: 0;
+            min-height: 56px;
         }
         .input-area textarea {
             flex: 1;
@@ -392,7 +440,8 @@
         /* Модалка */
         .modal-overlay {
             position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
             background: rgba(0,0,0,0.7);
             display: none;
             justify-content: center;
@@ -473,7 +522,7 @@
 </head>
 <body>
 <div class="app">
-    <!-- Боковая панель -->
+    <!-- Сайдбар -->
     <div class="sidebar" id="sidebar">
         <div class="sidebar-header">
             <span class="logo-small">OUTPUTEX</span>
@@ -489,13 +538,14 @@
             <button class="menu-btn" id="menuBtn">☰</button>
             <span class="logo">OUTPUTEX AI</span>
             <span class="online">Онлайн</span>
-            <button class="btn-icon" id="downloadBtn" title="Скачать диалог">⬇️</button>
             <button class="btn-icon" id="settingsBtn" title="Настройки">⚙️</button>
             <button class="google-btn" id="googleLoginBtn"><span>🔑</span> Войти</button>
         </div>
 
+        <!-- Чат (растягивается) -->
         <div class="messages" id="messages"></div>
 
+        <!-- Поле ввода -->
         <div class="input-area">
             <textarea id="question" rows="1" placeholder="Спросите что угодно..."></textarea>
             <button id="sendBtn">Отправить</button>
@@ -529,7 +579,6 @@
     const settingsBtn = document.getElementById('settingsBtn');
     const googleLoginBtn = document.getElementById('googleLoginBtn');
     const sidebarHistory = document.getElementById('sidebarHistory');
-    const downloadBtn = document.getElementById('downloadBtn');
     const menuBtn = document.getElementById('menuBtn');
     const sidebar = document.getElementById('sidebar');
     const overlay = document.getElementById('sidebarOverlay');
@@ -726,7 +775,6 @@
 
         sidebarHistory.innerHTML = html;
 
-        // Обработчики кликов
         sidebarHistory.querySelectorAll('.history-item .title').forEach(el => {
             el.addEventListener('click', function(e) {
                 e.stopPropagation();
@@ -958,10 +1006,6 @@
     });
 
     googleLoginBtn.addEventListener('click', googleLogin);
-    downloadBtn.addEventListener('click', () => {
-        alert('Скачивание диалога будет добавлено позже');
-    });
-
     menuBtn.addEventListener('click', toggleSidebar);
     overlay.addEventListener('click', toggleSidebar);
 
