@@ -1,4 +1,6 @@
 flask
 duckduckgo-search
+gigachat
 requests
-python-dotenv
+beautifulsoup4
+googlesearch-python
